@@ -1,0 +1,49 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion rootProject.buildToolsVersion
+    defaultConfig {
+        applicationId "com.ik.exploringviewmodel"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+//                arguments = ["room.exportSchema": "false"]
+//
+            }
+        }
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
+    compile 'android.arch.persistence.room:runtime:' + rootProject.archRoomVersion
+    compile 'android.arch.persistence.room:rxjava2:' + rootProject.archRoomVersion
+    annotationProcessor 'android.arch.lifecycle:compiler:' + rootProject.archLifecycleVersion
+    annotationProcessor 'android.arch.persistence.room:compiler:' + rootProject.archRoomVersion
+    compile 'com.android.support:design:' + rootProject.supportLibVersion
+    compile 'org.jetbrains.kotlin:kotlin-stdlib-jre7:' + kotlin_version
+    compile 'com.github.kittinunf.fuel:fuel:' + rootProject.fuelLibVersion
+    compile 'com.github.kittinunf.fuel:fuel-android:' + rootProject.fuelLibVersion
+    compile 'com.github.kittinunf.fuel:fuel-rxjava:' + rootProject.fuelLibVersion
+    compile 'com.google.code.gson:gson:2.7'
+}
+repositories {
+    mavenCentral()
+}
