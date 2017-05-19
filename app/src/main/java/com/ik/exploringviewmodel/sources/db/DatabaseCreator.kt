@@ -5,7 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.util.Log
-import com.ik.exploringviewmodel.sources.db.AppDatabase.DATABASE_NAME
+import com.ik.exploringviewmodel.sources.db.AppDatabase.Companion.DATABASE_NAME
 import io.reactivex.Completable
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -43,7 +43,7 @@ object DatabaseCreator {
                     "Starting bg job " + Thread.currentThread().name)
 
             // Reset the database to have new data on every run.
-            context.deleteDatabase(DATABASE_NAME)
+//            context.deleteDatabase(DATABASE_NAME)
 
             // Build the database!
             val db = Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
