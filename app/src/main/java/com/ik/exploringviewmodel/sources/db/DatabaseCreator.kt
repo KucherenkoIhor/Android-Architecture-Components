@@ -17,27 +17,25 @@ import java.util.concurrent.atomic.AtomicBoolean
  */
 object DatabaseCreator {
 
-    private val mIsDatabaseCreated = MutableLiveData<Boolean>()
+    private val isDatabaseCreated = MutableLiveData<Boolean>()
 
     lateinit var database: AppDatabase
 
     private val mInitializing = AtomicBoolean(true)
 
-    val isDatabaseCreated: LiveData<Boolean>
-        get() = mIsDatabaseCreated
-
     fun createDb(context: Context) {
         if (mInitializing.compareAndSet(true, false).not()) {
             return
         }
-        mIsDatabaseCreated.value = false
+
+        isDatabaseCreated.value = false
 
         Completable.fromAction {
             database = Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
         }
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { mIsDatabaseCreated.value = true }
+                .subscribe { isDatabaseCreated.value = true }
     }
 
 }

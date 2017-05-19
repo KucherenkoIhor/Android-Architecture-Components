@@ -12,7 +12,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reposDao(): ReposDao
 
     companion object {
-
         const val DATABASE_NAME = "basic-sample-db"
     }
 

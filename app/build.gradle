@@ -39,12 +39,16 @@ dependencies {
     kapt 'android.arch.lifecycle:compiler:' + rootProject.archLifecycleVersion
     kapt 'android.arch.persistence.room:compiler:' + rootProject.archRoomVersion
     compile 'com.android.support:design:' + rootProject.supportLibVersion
+    compile 'com.android.support:cardview-v7:' + rootProject.supportLibVersion
     compile 'org.jetbrains.kotlin:kotlin-stdlib-jre7:' + kotlin_version
     compile 'com.github.kittinunf.fuel:fuel:' + rootProject.fuelLibVersion
     compile 'com.github.kittinunf.fuel:fuel-android:' + rootProject.fuelLibVersion
     compile 'com.github.kittinunf.fuel:fuel-rxjava:' + rootProject.fuelLibVersion
     compile 'com.google.code.gson:gson:2.7'
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
+    compile "android.arch.lifecycle:extensions:1.0.0-alpha1"
+    compile "android.arch.lifecycle:runtime:1.0.0-alpha1"
 }
 repositories {
     mavenCentral()
