@@ -11,6 +11,6 @@ interface ReposDataSource {
 
     fun getRepositories(organization: String): Single<List<Repo>>
 
-    fun saveRepos(list: MutableList<Repo>) : Completable = Completable.complete()
+    fun saveRepositories(list: List<Repo>) : Unit = Unit
 
 }

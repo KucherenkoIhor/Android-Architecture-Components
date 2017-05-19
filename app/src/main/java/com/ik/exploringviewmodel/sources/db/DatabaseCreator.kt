@@ -7,6 +7,9 @@ import android.content.Context
 import android.util.Log
 import com.ik.exploringviewmodel.sources.db.AppDatabase.Companion.DATABASE_NAME
 import io.reactivex.Completable
+import io.reactivex.Scheduler
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -16,39 +19,25 @@ object DatabaseCreator {
 
     private val mIsDatabaseCreated = MutableLiveData<Boolean>()
 
-    var database: AppDatabase? = null
-        private set
+    lateinit var database: AppDatabase
 
     private val mInitializing = AtomicBoolean(true)
 
-    /** Used to observe when the database initialization is done  */
     val isDatabaseCreated: LiveData<Boolean>
         get() = mIsDatabaseCreated
 
-    /**
-     * Creates or returns a previously-created database.
-     *
-     */
     fun createDb(context: Context) {
-
-        Log.d("DatabaseCreator", "Creating DB from " + Thread.currentThread().name)
-
         if (mInitializing.compareAndSet(true, false).not()) {
-            return  // Already initializing
+            return
         }
-        mIsDatabaseCreated.value = false// Trigger an update to show a loading screen.
+        mIsDatabaseCreated.value = false
 
         Completable.fromAction {
-            Log.d("DatabaseCreator",
-                    "Starting bg job " + Thread.currentThread().name)
-
-            // Reset the database to have new data on every run.
-//            context.deleteDatabase(DATABASE_NAME)
-
-            // Build the database!
-            val db = Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
-            database = db
-        }.subscribe { mIsDatabaseCreated.value = true }
+            database = Room.databaseBuilder(context, AppDatabase::class.java, DATABASE_NAME).build()
+        }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { mIsDatabaseCreated.value = true }
     }
 
 }

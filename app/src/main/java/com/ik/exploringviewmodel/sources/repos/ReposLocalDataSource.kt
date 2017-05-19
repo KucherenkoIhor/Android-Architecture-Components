@@ -1,8 +1,10 @@
 package com.ik.exploringviewmodel.sources.repos
 
+import android.util.Log
 import com.ik.exploringviewmodel.entities.Repo
 import com.ik.exploringviewmodel.sources.db.DatabaseCreator
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -10,10 +12,14 @@ import io.reactivex.Single
  */
 class ReposLocalDataSource : ReposDataSource {
 
-    override fun getRepositories(organization: String): Single<List<Repo>>
-        = DatabaseCreator.database?.reposDao()?.loadAllRepos()?.singleOrError()!!
+    val reposDao = DatabaseCreator.database.reposDao()
 
-    override fun saveRepos(list: MutableList<Repo>): Completable
-        = Completable.fromAction { DatabaseCreator.database?.reposDao()?.insertAll(list) }
+    override fun getRepositories(organization: String): Single<List<Repo>>
+        = reposDao
+            .loadAllRepos()
+            .firstOrError()
+
+    override fun saveRepositories(list: List<Repo>)
+        =  reposDao.insertAll(list.toMutableList())
 
 }
