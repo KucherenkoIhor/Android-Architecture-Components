@@ -1,10 +1,13 @@
 package com.ik.exploringviewmodel.flow.repos
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import com.ik.exploringviewmodel.R
 import com.ik.exploringviewmodel.base.BaseLifecycleActivity
+import com.ik.exploringviewmodel.entities.Repo
 
 class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayout.OnRefreshListener {
 
@@ -21,19 +24,32 @@ class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayou
         setContentView(R.layout.activity_repos)
         rv.setHasFixedSize(true)
         rv.adapter = adapter
-        updateUI()
         vRefresh.setOnRefreshListener(this)
+
+        if (savedInstanceState == null) {
+            viewModel.setOrganization("yalantis")
+        }
+
+        updateUI()
     }
 
     private fun updateUI() {
-        viewModel.getRepositories("yalantis")
-                .doAfterTerminate { vRefresh.isRefreshing = false }
-                .subscribe { data, error ->
-                    error?.printStackTrace()
-                    data?.let { adapter.dataSource = it }  }
+
+        viewModel.isLoadingLiveData.observe(this, Observer<Boolean> {
+            it?.let { vRefresh.isRefreshing = it }
+        })
+
+        viewModel.listRepoLiveData.observe(this, Observer<List<Repo>> {
+           Log.d("TAGGG", "fddfdf" + it)
+            it?.let { adapter.dataSource = it }
+        })
+
+        viewModel.throwableLiveData.observe(this, Observer<Throwable> {
+            Log.d("TAGGG", "fddfdfffffffffffffffffff")
+        })
     }
 
     override fun onRefresh() {
-        updateUI()
+        viewModel.setOrganization("yalantis")
     }
 }

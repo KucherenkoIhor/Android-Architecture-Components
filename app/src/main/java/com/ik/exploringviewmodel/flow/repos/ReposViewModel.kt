@@ -1,13 +1,10 @@
 package com.ik.exploringviewmodel.flow.repos
 
 import android.app.Application
-import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.MutableLiveData
 import com.ik.exploringviewmodel.base.BaseViewModel
-import com.ik.exploringviewmodel.sources.repos.ReposRepository
-import android.arch.lifecycle.Transformations
-import android.arch.lifecycle.LiveData
 import com.ik.exploringviewmodel.entities.Repo
-import android.arch.lifecycle.*
+import com.ik.exploringviewmodel.sources.repos.ReposRepository
 
 
 
@@ -21,19 +18,32 @@ class ReposViewModel(application: Application?) : BaseViewModel(application) {
 
     private val organizationLiveData = MutableLiveData<String>()
 
-    val repositories: LiveData<List<Repo>> = Transformations.switchMap(organizationLiveData) {
-       // reposRepository.getRepositories(it)
+    val isLoadingLiveData = MutableLiveData<Boolean>()
+
+    val throwableLiveData = MutableLiveData<Throwable>()
+
+    val listRepoLiveData = MutableLiveData<List<Repo>>()
+
+    init {
+      organizationLiveData.observeForever {
+          reposRepository
+                  .getRepositories(it ?: return@observeForever)
+                  .doOnSubscribe { isLoadingLiveData.value = true }
+                  .doAfterTerminate { isLoadingLiveData.value = false}
+                  .doOnSubscribe { bindToLifecycle(it) }
+                  .subscribe { data, error ->
+                      error?.let { throwableLiveData.value = it }
+                      data?.let { listRepoLiveData.value = it }  }
+      }
     }
+
 
     fun setOrganization(organization: String) {
         organizationLiveData.value = organization
-
-       // LiveDataReactiveStreams
-
     }
 
-//
-//    fun getRepositories(organization: String) = reposRepository
-//            .getRepositories(organization)
-//            .doOnSubscribe { bindToLifecycle(it) }
+    override fun onCleared() {
+
+        super.onCleared()
+    }
 }

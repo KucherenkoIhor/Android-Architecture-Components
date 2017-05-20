@@ -1,10 +1,7 @@
 package com.ik.exploringviewmodel.sources.repos
 
-import android.util.Log
 import com.ik.exploringviewmodel.entities.Repo
 import com.ik.exploringviewmodel.sources.db.DatabaseCreator
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -18,6 +15,7 @@ class ReposLocalDataSource : ReposDataSource {
         = reposDao
             .loadAllRepos()
             .firstOrError()
+            .doOnSuccess { if (it.isEmpty()) throw Exception() }
 
     override fun saveRepositories(list: List<Repo>)
         =  reposDao.insertAll(list.toMutableList())

@@ -10,5 +10,19 @@ import io.reactivex.disposables.Disposable
  */
 open class BaseViewModel(application: Application?) : AndroidViewModel(application) {
 
+    private var disposables : CompositeDisposable = CompositeDisposable()
 
+    protected fun bindToLifecycle(disposable: Disposable) {
+        if(disposables.isDisposed) {
+            disposables = CompositeDisposable()
+        }
+        disposables.add(disposable)
+    }
+
+    override fun onCleared() {
+        if(disposables.isDisposed.not()) {
+            disposables.clear()
+        }
+        super.onCleared()
+    }
 }
