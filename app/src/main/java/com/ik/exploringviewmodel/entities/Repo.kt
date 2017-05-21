@@ -10,23 +10,15 @@ import com.google.gson.reflect.TypeToken
  * Created by ihor on 18.05.17.
  */
 @Entity(tableName = "repos")
-open class Repo {
-
-    @PrimaryKey var id: Long? = null
-
-    var name: String? = null
-
-    var full_name: String? = null
-
-    var description: String? = null
-
-    class Deserializer : ResponseDeserializable<Repo> {
-        override fun deserialize(content: String) = Gson().fromJson(content, Repo::class.java)
-    }
+data class Repo (
+        @PrimaryKey var id: Long?,
+        var name: String?,
+        var full_name: String?,
+        var description: String?) {
 
     class ListDeserializer : ResponseDeserializable<List<Repo>> {
-        override fun deserialize(content: String) = Gson()
-                .fromJson<List<Repo>>(content, object : TypeToken<List<Repo>>() {}.type)
+        override fun deserialize(content: String) =
+                Gson().fromJson<List<Repo>>(content, object : TypeToken<List<Repo>>() {}.type)
     }
 
 }

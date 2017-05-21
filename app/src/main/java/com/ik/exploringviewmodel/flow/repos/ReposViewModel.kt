@@ -1,8 +1,10 @@
 package com.ik.exploringviewmodel.flow.repos
 
 import android.app.Application
+import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import com.ik.exploringviewmodel.base.BaseViewModel
+import android.arch.lifecycle.Transformations
 import com.ik.exploringviewmodel.entities.Repo
 import com.ik.exploringviewmodel.sources.repos.ReposRepository
 
@@ -12,38 +14,40 @@ import com.ik.exploringviewmodel.sources.repos.ReposRepository
 /**
  * Created by ihor on 19.05.17.
  */
-class ReposViewModel(application: Application?) : BaseViewModel(application) {
+class ReposViewModel(application: Application?) : AndroidViewModel(application) {
 
     private val reposRepository = ReposRepository()
 
     private val organizationLiveData = MutableLiveData<String>()
 
-    val isLoadingLiveData = MutableLiveData<Boolean>()
-
-    val throwableLiveData = MutableLiveData<Throwable>()
-
-    val listRepoLiveData = MutableLiveData<List<Repo>>()
-
-    init {
-      organizationLiveData.observeForever {
-          reposRepository
-                  .getRepositories(it ?: return@observeForever)
-                  .doOnSubscribe { isLoadingLiveData.value = true }
-                  .doAfterTerminate { isLoadingLiveData.value = false}
-                  .doOnSubscribe { bindToLifecycle(it) }
-                  .subscribe { data, error ->
-                      error?.let { throwableLiveData.value = it }
-                      data?.let { listRepoLiveData.value = it }  }
-      }
+    val resultLiveData = Transformations.switchMap(organizationLiveData) {
+        ReposLiveData(reposRepository, it)
     }
 
+    val isLoadingLiveData = MediatorLiveData<Boolean>()
+    init {
+        isLoadingLiveData.addSource(resultLiveData) {
+            isLoadingLiveData.value = false
+        }
+    }
+
+    val throwableLiveData = MediatorLiveData<Throwable>()
+    init {
+        throwableLiveData.addSource(resultLiveData) {
+            it?.second?.let { throwableLiveData.value = it }
+        }
+    }
+
+    val reposLiveData = MediatorLiveData<List<Repo>>()
+    init {
+        reposLiveData.addSource(resultLiveData) {
+                it?.first?.let { reposLiveData.value = it }
+        }
+    }
 
     fun setOrganization(organization: String) {
         organizationLiveData.value = organization
+        isLoadingLiveData.value = true
     }
 
-    override fun onCleared() {
-
-        super.onCleared()
-    }
 }

@@ -13,9 +13,10 @@ class ReposLocalDataSource : ReposDataSource {
 
     override fun getRepositories(organization: String): Single<List<Repo>>
         = reposDao
-            .loadAllRepos()
-            .firstOrError()
-            .doOnSuccess { if (it.isEmpty()) throw Exception() }
+                .loadAllRepos()
+                .firstOrError()
+                .doOnSuccess { if (it.isEmpty()) throw Exception() }
+
 
     override fun saveRepositories(list: List<Repo>)
         =  reposDao.insertAll(list.toMutableList())

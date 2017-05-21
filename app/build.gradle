@@ -13,9 +13,9 @@ android {
         versionName "1.0"
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = ["room.schemaLocation":
-                                     "$projectDir/schemas".toString()]
-//                arguments = ["room.exportSchema": "false"]
+                //arguments = ["room.schemaLocation":
+                //                     "$projectDir/schemas".toString()]
+                arguments = ["room.exportSchema": "false"]
 //
             }
         }

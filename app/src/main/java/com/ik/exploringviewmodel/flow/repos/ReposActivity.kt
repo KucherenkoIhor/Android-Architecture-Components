@@ -2,9 +2,9 @@ package com.ik.exploringviewmodel.flow.repos
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import com.ik.exploringviewmodel.R
 import com.ik.exploringviewmodel.base.BaseLifecycleActivity
 import com.ik.exploringviewmodel.entities.Repo
@@ -30,22 +30,18 @@ class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayou
             viewModel.setOrganization("yalantis")
         }
 
-        updateUI()
+        observeLiveData()
     }
 
-    private fun updateUI() {
-
+    private fun observeLiveData() {
         viewModel.isLoadingLiveData.observe(this, Observer<Boolean> {
             it?.let { vRefresh.isRefreshing = it }
         })
-
-        viewModel.listRepoLiveData.observe(this, Observer<List<Repo>> {
-           Log.d("TAGGG", "fddfdf" + it)
+        viewModel.reposLiveData.observe(this, Observer<List<Repo>> {
             it?.let { adapter.dataSource = it }
         })
-
         viewModel.throwableLiveData.observe(this, Observer<Throwable> {
-            Log.d("TAGGG", "fddfdfffffffffffffffffff")
+            it?.let { Snackbar.make(rv, it.localizedMessage, Snackbar.LENGTH_LONG).show() }
         })
     }
 

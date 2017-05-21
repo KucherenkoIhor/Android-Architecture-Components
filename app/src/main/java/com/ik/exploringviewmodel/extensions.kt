@@ -8,6 +8,6 @@ import com.github.kittinunf.fuel.core.Request
  */
 
 fun Request.log() : Request {
-    response { request, response, result -> Log.d("HTTP", response.toString()) }
+    response { request, response, result -> Log.d("HTTP", request.toString()) }
     return this
 }
