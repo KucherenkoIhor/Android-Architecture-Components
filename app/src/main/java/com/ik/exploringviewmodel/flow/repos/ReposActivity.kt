@@ -29,7 +29,6 @@ class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayou
         if (savedInstanceState == null) {
             viewModel.setOrganization("yalantis")
         }
-
         observeLiveData()
     }
 

@@ -1,7 +1,6 @@
 package com.ik.exploringviewmodel.sources.repos
 
 import com.ik.exploringviewmodel.entities.Repo
-import io.reactivex.Completable
 import io.reactivex.Single
 
 /**

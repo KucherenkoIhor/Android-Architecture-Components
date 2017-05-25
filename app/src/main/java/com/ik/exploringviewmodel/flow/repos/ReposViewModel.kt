@@ -4,7 +4,6 @@ import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MediatorLiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
 import com.ik.exploringviewmodel.entities.Repo
 import com.ik.exploringviewmodel.sources.repos.ReposRepository
 
@@ -20,8 +19,11 @@ class ReposViewModel(application: Application?) : AndroidViewModel(application) 
 
     private val organizationLiveData = MutableLiveData<String>()
 
-    val resultLiveData = Transformations.switchMap(organizationLiveData) {
-        ReposLiveData(reposRepository, it)
+    val resultLiveData = ReposLiveData(reposRepository)
+    init {
+        resultLiveData.addSource(organizationLiveData) {
+            it?.let { resultLiveData.organization = it }
+        }
     }
 
     val isLoadingLiveData = MediatorLiveData<Boolean>()

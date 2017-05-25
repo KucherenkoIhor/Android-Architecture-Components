@@ -33,6 +33,7 @@ android {
 }
 
 dependencies {
+ //   compile 'android.arch.lifecycle:reactivestreams:' + rootProject.archLifecycleVersion
     compile 'android.arch.lifecycle:extensions:' + rootProject.archLifecycleVersion
     compile 'android.arch.persistence.room:runtime:' + rootProject.archRoomVersion
     compile 'android.arch.persistence.room:rxjava2:' + rootProject.archRoomVersion
