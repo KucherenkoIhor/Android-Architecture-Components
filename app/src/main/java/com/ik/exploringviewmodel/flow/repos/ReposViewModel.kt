@@ -15,11 +15,9 @@ import com.ik.exploringviewmodel.sources.repos.ReposRepository
  */
 class ReposViewModel(application: Application?) : AndroidViewModel(application) {
 
-    private val reposRepository = ReposRepository()
-
     private val organizationLiveData = MutableLiveData<String>()
 
-    val resultLiveData = ReposLiveData(reposRepository)
+    val resultLiveData = ReposLiveData()
     init {
         resultLiveData.addSource(organizationLiveData) {
             it?.let { resultLiveData.organization = it }

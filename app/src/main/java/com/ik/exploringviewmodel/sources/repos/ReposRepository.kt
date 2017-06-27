@@ -9,17 +9,14 @@ import io.reactivex.schedulers.Schedulers
 /**
  * Created by ihor on 18.05.17.
  */
-class ReposRepository : ReposDataSource {
-
-    private val localDataSource = ReposLocalDataSource()
-    private val remoteDataSource = ReposRemoteDataSource()
+object ReposRepository : ReposDataSource {
 
     override fun getRepositories(organization: String): Single<List<Repo>>
-        = localDataSource
+        = ReposLocalDataSource
                 .getRepositories(organization)
                 .onErrorResumeNext {
-                    remoteDataSource.getRepositories(organization)
-                            .doOnSuccess { localDataSource.saveRepositories(it) }
+                    ReposRemoteDataSource.getRepositories(organization)
+                            .doOnSuccess { ReposLocalDataSource.saveRepositories(it) }
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

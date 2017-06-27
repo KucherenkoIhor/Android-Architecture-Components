@@ -9,15 +9,14 @@ import io.reactivex.disposables.Disposable
  * Created by ihor on 21.05.17.
  */
 
-class ReposLiveData(val repository: ReposRepository)
-    : MediatorLiveData<Pair<List<Repo>?, Throwable?>>() {
+class ReposLiveData() : MediatorLiveData<Pair<List<Repo>?, Throwable?>>() {
 
     private var disposable: Disposable? = null
 
     var organization: String? = null
         set(value) {
             value?.let {
-                disposable = repository
+                disposable = ReposRepository
                         .getRepositories(it)
                         .subscribe { data, error -> this@ReposLiveData.value = Pair(data, error)}
 

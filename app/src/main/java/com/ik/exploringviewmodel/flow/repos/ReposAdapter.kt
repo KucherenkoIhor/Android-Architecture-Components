@@ -18,12 +18,12 @@ class ReposAdapter : BaseAdapter<Repo, ReposAdapter.ReposViewHolder>() {
 
     class ReposViewHolder(itemView: View?) : BaseViewHolder<Repo>(itemView) {
 
-        val tvName : TextView by lazy { itemView?.findViewById(R.id.tvName) as TextView }
-        val tvDescription : TextView by lazy { itemView?.findViewById(R.id.tvDescription) as TextView }
+        val tvName by lazy { itemView?.findViewById<TextView?>(R.id.tvName) }
+        val tvDescription by lazy { itemView?.findViewById<TextView?>(R.id.tvDescription) }
 
         override fun onBind(item: Repo) {
-            tvName.text = item.name
-            tvDescription.text = item.description
+            tvName?.text = item.name
+            tvDescription?.text = item.description
         }
 
     }

@@ -3,19 +3,19 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion rootProject.buildToolsVersion
     defaultConfig {
         applicationId "com.ik.exploringviewmodel"
         minSdkVersion 15
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
         javaCompileOptions {
             annotationProcessorOptions {
                 //arguments = ["room.schemaLocation":
                 //                     "$projectDir/schemas".toString()]
-                arguments = ["room.exportSchema": "false"]
+              //  arguments = ["room.exportSchema": "false"]
 //
             }
         }

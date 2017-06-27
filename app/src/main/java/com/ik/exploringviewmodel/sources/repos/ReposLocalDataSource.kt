@@ -7,7 +7,7 @@ import io.reactivex.Single
 /**
  * Created by ihor on 18.05.17.
  */
-class ReposLocalDataSource : ReposDataSource {
+object ReposLocalDataSource : ReposDataSource {
 
     val reposDao = DatabaseCreator.database.reposDao()
 
