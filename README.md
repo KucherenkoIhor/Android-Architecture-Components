@@ -25,3 +25,8 @@ As you can see, it handles configuration changes without any problems, and an Ac
 How you have probably noticed, our activity assumes minimum responsibilities. ReposViewModel holds state and view data in the following way:
 
 ![](https://cdn-images-1.medium.com/max/800/1*QbWnVVCrIixCTevdDwy40Q.png)
+
+Testability
+
+![](https://cdn-images-1.medium.com/max/1600/1*LuNoy4ZjSfMYshqwd5GFWA.tiff)
+

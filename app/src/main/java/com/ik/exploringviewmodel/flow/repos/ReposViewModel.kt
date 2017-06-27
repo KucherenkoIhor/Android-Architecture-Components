@@ -8,12 +8,10 @@ import com.ik.exploringviewmodel.entities.Repo
 import com.ik.exploringviewmodel.sources.repos.ReposRepository
 
 
-
-
 /**
  * Created by ihor on 19.05.17.
  */
-class ReposViewModel(application: Application?) : AndroidViewModel(application) {
+open class ReposViewModel(application: Application?) : AndroidViewModel(application) {
 
     private val organizationLiveData = MutableLiveData<String>()
 

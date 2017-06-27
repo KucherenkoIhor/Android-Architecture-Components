@@ -14,7 +14,10 @@ import io.reactivex.Flowable
 @Dao
 interface ReposDao {
 
-    @Query("SELECT * FROM repos WHERE organization LIKE :organization")
+    @Query("SELECT * FROM repos")
+    fun loadAllRepos(): Flowable<List<Repo>>
+
+    @Query("SELECT * FROM repos WHERE organization = :organization")
     fun loadAllRepos(organization: String?): Flowable<List<Repo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
