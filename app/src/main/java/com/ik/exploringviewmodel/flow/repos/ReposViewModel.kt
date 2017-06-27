@@ -17,32 +17,20 @@ class ReposViewModel(application: Application?) : AndroidViewModel(application) 
 
     private val organizationLiveData = MutableLiveData<String>()
 
-    val resultLiveData = ReposLiveData()
-    init {
-        resultLiveData.addSource(organizationLiveData) {
-            it?.let { resultLiveData.organization = it }
-        }
+    val resultLiveData = ReposLiveData().apply {
+        this.addSource(organizationLiveData) { it?.let { this.organization = it } }
     }
 
-    val isLoadingLiveData = MediatorLiveData<Boolean>()
-    init {
-        isLoadingLiveData.addSource(resultLiveData) {
-            isLoadingLiveData.value = false
-        }
+    val isLoadingLiveData = MediatorLiveData<Boolean>().apply {
+        this.addSource(resultLiveData) { this.value = false }
     }
 
-    val throwableLiveData = MediatorLiveData<Throwable>()
-    init {
-        throwableLiveData.addSource(resultLiveData) {
-            it?.second?.let { throwableLiveData.value = it }
-        }
+    val throwableLiveData = MediatorLiveData<Throwable>().apply {
+        this.addSource(resultLiveData) { it?.second?.let { this.value = it } }
     }
 
-    val reposLiveData = MediatorLiveData<List<Repo>>()
-    init {
-        reposLiveData.addSource(resultLiveData) {
-                it?.first?.let { reposLiveData.value = it }
-        }
+    val reposLiveData = MediatorLiveData<List<Repo>>().apply {
+        this.addSource(resultLiveData) { it?.first?.let { this.value = it } }
     }
 
     fun setOrganization(organization: String) {

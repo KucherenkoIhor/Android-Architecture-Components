@@ -13,7 +13,7 @@ object ReposLocalDataSource : ReposDataSource {
 
     override fun getRepositories(organization: String): Single<List<Repo>>
         = reposDao
-                .loadAllRepos()
+                .loadAllRepos(organization)
                 .firstOrError()
                 .doOnSuccess { if (it.isEmpty()) throw Exception() }
 

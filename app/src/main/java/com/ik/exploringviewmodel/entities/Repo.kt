@@ -14,7 +14,8 @@ data class Repo (
         @PrimaryKey var id: Long?,
         var name: String?,
         var full_name: String?,
-        var description: String?) {
+        var description: String?,
+        var organization: String?) {
 
     class ListDeserializer : ResponseDeserializable<List<Repo>> {
         override fun deserialize(content: String) =

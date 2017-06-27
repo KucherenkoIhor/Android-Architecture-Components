@@ -23,5 +23,6 @@ object ReposRemoteDataSource : ReposDataSource {
                     .httpGet()
                     .rx_object(Repo.ListDeserializer())
                     .map { it?.component1() ?: throw it?.component2() ?: throw Exception() }
+                    .doOnSuccess { it.onEach { it.organization = organization } }
 
 }
