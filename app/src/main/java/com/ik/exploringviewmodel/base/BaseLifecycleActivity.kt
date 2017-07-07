@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleRegistry
 import android.arch.lifecycle.LifecycleRegistryOwner
 import android.arch.lifecycle.ViewModelProviders
 import android.support.v7.app.AppCompatActivity
+import com.ik.exploringviewmodel.unsafeLazy
 
 /**
  * Created by ihor on 19.05.17.
@@ -14,8 +15,7 @@ abstract class BaseLifecycleActivity<T : AndroidViewModel> : AppCompatActivity()
 
     abstract val viewModelClass: Class<T>
 
-    protected val viewModel: T
-            by lazy(LazyThreadSafetyMode.NONE, { ViewModelProviders.of(this).get(viewModelClass) })
+    protected val viewModel: T by unsafeLazy { ViewModelProviders.of(this).get(viewModelClass) }
 
     private val registry = LifecycleRegistry(this)
 

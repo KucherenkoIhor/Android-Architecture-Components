@@ -8,16 +8,15 @@ import android.support.v7.widget.RecyclerView
 import com.ik.exploringviewmodel.R
 import com.ik.exploringviewmodel.base.BaseLifecycleActivity
 import com.ik.exploringviewmodel.entities.Repo
+import com.ik.exploringviewmodel.unsafeLazy
 
 class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayout.OnRefreshListener {
 
     override val viewModelClass = ReposViewModel::class.java
 
-    private val rv
-            by lazy(LazyThreadSafetyMode.NONE, { findViewById<RecyclerView>(R.id.rv) })
+    private val rv by unsafeLazy { findViewById<RecyclerView>(R.id.rv) }
 
-    private val vRefresh
-            by lazy(LazyThreadSafetyMode.NONE, { findViewById<SwipeRefreshLayout>(R.id.lRefresh) })
+    private val vRefresh by unsafeLazy { findViewById<SwipeRefreshLayout>(R.id.lRefresh) }
 
     private val adapter = ReposAdapter()
 
