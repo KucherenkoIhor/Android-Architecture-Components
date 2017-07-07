@@ -14,7 +14,8 @@ abstract class BaseLifecycleActivity<T : AndroidViewModel> : AppCompatActivity()
 
     abstract val viewModelClass: Class<T>
 
-    protected val viewModel by lazy { ViewModelProviders.of(this).get(viewModelClass)!! }
+    protected val viewModel: T
+            by lazy(LazyThreadSafetyMode.NONE, { ViewModelProviders.of(this).get(viewModelClass) })
 
     private val registry = LifecycleRegistry(this)
 

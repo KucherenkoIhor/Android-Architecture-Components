@@ -13,9 +13,11 @@ class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayou
 
     override val viewModelClass = ReposViewModel::class.java
 
-    private val rv by lazy { findViewById<RecyclerView>(R.id.rv) }
+    private val rv
+            by lazy(LazyThreadSafetyMode.NONE, { findViewById<RecyclerView>(R.id.rv) })
 
-    private val vRefresh by lazy { findViewById<SwipeRefreshLayout>(R.id.lRefresh) }
+    private val vRefresh
+            by lazy(LazyThreadSafetyMode.NONE, { findViewById<SwipeRefreshLayout>(R.id.lRefresh) })
 
     private val adapter = ReposAdapter()
 
