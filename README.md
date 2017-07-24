@@ -20,13 +20,104 @@ Combination of these components solves main challenges faced by Android develope
 
 As you can see, it handles configuration changes without any problems, and an Activity looks very simple:
 
-![](https://cdn-images-1.medium.com/max/800/1*aSSP4DL-bNEFGnY6aAb00Q.png)
+```Java
+class ReposActivity : BaseLifecycleActivity<ReposViewModel>(), SwipeRefreshLayout.OnRefreshListener {
+
+    override val viewModelClass = ReposViewModel::class.java
+
+    private val rv by unsafeLazy { findViewById<RecyclerView>(R.id.rv) }
+
+    private val vRefresh by unsafeLazy { findViewById<SwipeRefreshLayout>(R.id.lRefresh) }
+
+    private val adapter = ReposAdapter()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_repos)
+        rv.setHasFixedSize(true)
+        rv.adapter = adapter
+        vRefresh.setOnRefreshListener(this)
+
+        if (savedInstanceState == null) {
+            viewModel.setOrganization("yalantis")
+        }
+        observeLiveData()
+    }
+
+    private fun observeLiveData() {
+        viewModel.isLoadingLiveData.observe(this, Observer<Boolean> {
+            it?.let { vRefresh.isRefreshing = it }
+        })
+        viewModel.reposLiveData.observe(this, Observer<List<Repo>> {
+            it?.let { adapter.dataSource = it }
+        })
+        viewModel.throwableLiveData.observe(this, Observer<Throwable> {
+            it?.let { Snackbar.make(rv, it.localizedMessage, Snackbar.LENGTH_LONG).show() }
+        })
+    }
+
+    override fun onRefresh() {
+        viewModel.setOrganization("yalantis")
+    }
+}
+```
 
 How you have probably noticed, our activity assumes minimum responsibilities. ReposViewModel holds state and view data in the following way:
 
-![](https://cdn-images-1.medium.com/max/800/1*QbWnVVCrIixCTevdDwy40Q.png)
+```Java
+open class ReposViewModel(application: Application?) : AndroidViewModel(application) {
+
+    private val organizationLiveData = MutableLiveData<String>()
+
+    val resultLiveData = ReposLiveData().apply {
+        this.addSource(organizationLiveData) { it?.let { this.organization = it } }
+    }
+
+    val isLoadingLiveData = MediatorLiveData<Boolean>().apply {
+        this.addSource(resultLiveData) { this.value = false }
+    }
+
+    val throwableLiveData = MediatorLiveData<Throwable>().apply {
+        this.addSource(resultLiveData) { it?.second?.let { this.value = it } }
+    }
+
+    val reposLiveData = MediatorLiveData<List<Repo>>().apply {
+        this.addSource(resultLiveData) { it?.first?.let { this.value = it } }
+    }
+
+    fun setOrganization(organization: String) {
+        organizationLiveData.value = organization
+        isLoadingLiveData.value = true
+    }
+
+}
+```
 
 Testability
 
-![](https://cdn-images-1.medium.com/max/1600/1*LuNoy4ZjSfMYshqwd5GFWA.tiff)
+```Java
+@RunWith(AndroidJUnit4::class)
+class SampleInstrumentedTest {
+
+    @get:Rule
+    val activityRule = ActivityTestRule<ReposActivity>(ReposActivity::class.java, true, true)
+
+    private var viewModel: ReposViewModel? = null
+
+    @Before
+    fun init() {
+        viewModel = ViewModelProviders.of(activityRule.activity).get(ReposViewModel::class.java)
+    }
+
+    @Test
+    fun testNotNull() {
+        activityRule.activity.runOnUiThread {
+            viewModel?.setOrganization("yalantis")
+            viewModel?.reposLiveData?.observe(activityRule.activity, Observer<List<Repo>> {
+               assertNotNull(it)
+            })
+        }
+    }
+}
+```
 
