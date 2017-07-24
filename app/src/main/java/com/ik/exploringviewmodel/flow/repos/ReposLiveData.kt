@@ -9,7 +9,7 @@ import io.reactivex.disposables.Disposable
  * Created by ihor on 21.05.17.
  */
 
-class ReposLiveData() : MediatorLiveData<Pair<List<Repo>?, Throwable?>>() {
+class ReposLiveData : MediatorLiveData<Pair<List<Repo>?, Throwable?>>() {
 
     private var disposable: Disposable? = null
 
