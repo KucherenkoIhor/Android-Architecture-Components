@@ -1,7 +1,7 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.1.3'
+    ext.kotlin_version = '1.1.3-2'
     repositories {
         jcenter()
     }
@@ -28,7 +28,7 @@ task clean(type: Delete) {
 ext {
     buildToolsVersion = "26.0.0"
     supportLibVersion = "26.0.0-beta2"
-    archLifecycleVersion = "1.0.0-alpha3"
-    archRoomVersion = "1.0.0-alpha3"
-    fuelLibVersion = "1.8.0"
+    archLifecycleVersion = "1.0.0-alpha5"
+    archRoomVersion = "1.0.0-alpha5"
+    fuelLibVersion = "1.9.0"
 }
